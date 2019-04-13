@@ -1,0 +1,46 @@
+@model Movie
+
+<div class="navigation-link">
+    <a href="dashboard">Dashboard</a> | <a href="GetMovies">Movies</a> | Add Movie
+</div>
+
+<form class="movie-reg" asp-action="createMovie" asp-controller="Rental" method="post">
+    <div class="form-group">
+        <span asp-validation-for="Title" class="errorMessage"></span>
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control">
+    </div>
+    <div class="form-group">
+        <span asp-validation-for="GenerId" class="errorMessage"></span>
+        <label asp-for="GenerId"></label>
+        <select asp-for="GenerId" class="form-control">
+            <option value="">-</option>
+            <option value="1">Action</option>
+            <option value="2">Romance</option>
+            <option value="3">Scientific</option>
+            <option value="4">Cartoon</option>
+            <option value="5">Triller</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <span asp-validation-for="Released" class="errorMessage"></span>
+        <label asp-for="Released"></label>
+        <input asp-for="Released" class="form-control">
+    </div>
+    <div class="form-group">
+        <span asp-validation-for="Description" class="errorMessage"></span>
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+        <span asp-validation-for="Poster" class="errorMessage"></span>
+        <label asp-for="Poster"></label>
+        <input asp-for="Poster" class="form-control">
+    </div>
+    <div class="form-group">
+        <span asp-validation-for="AgeLevel" class="errorMessage"></span>
+        <label asp-for="AgeLevel"></label>
+        <input asp-for="AgeLevel" class="form-control">
+    </div>
+    <button class="btn btn-success"> Register </button>
+</form>

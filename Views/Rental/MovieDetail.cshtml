@@ -1,0 +1,41 @@
+@model Movie
+
+<div class="navigation-link">
+    <a href="/dashboard">Dashboard</a> | <a href="/GetMovies">Movies</a> | <a href="/GetMoveCreateForm">Add Movie</a>
+</div>
+
+<div class="movie-poster-larg">
+    <img class="large" src="@Model.Poster" alt="MoviePoster">    
+</div>
+<div class="movie-detail-info">
+    <p class="movie-title">
+       Title: @Model.Title
+    </p>
+    <p>
+        Gener: @Model.GenerId
+    </p>
+    <p>
+        Released: @Model.Released
+    </p>
+    <p>
+        Age Level: @Model.AgeLevel
+    </p>
+    <p>
+        @{
+            double sum = 0.0, counter = 1.0;
+        
+            @foreach (var item in @Model.UserMovies)
+            {
+                sum += item.RatingValue;
+                counter += 1;
+            }
+
+            double averageRating = sum/counter;
+        }
+        Average Customer Rating: @averageRating
+    </p>
+    <p>
+        Description: @Model.Description
+    </p>
+    <a href="/CheckOutMovie/@Model.MovieId" class="btn btn-success">Check Out</a>
+</div>

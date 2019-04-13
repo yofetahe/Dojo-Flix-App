@@ -1,0 +1,27 @@
+@model Rental
+
+<div class="navigation-link">
+    <a href="dashboard">Dashboard</a> | Movies | <a href="GetMoveCreateForm">Add Movie</a>
+</div>
+
+<div class="avialable-movies-list">
+    <div class="avialable-movies-header">
+        <h3>Avialable Movies</h3>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search">
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+    
+    <hr>
+    @foreach (var movie in @Model.Movies)
+    {
+        <div class="movie-link">
+            <img class="small" src="@movie.Poster" alt="MoviePoster">
+            <br><br>
+            <p>Movie Title: <i><a href="MovieDetail/@movie.MovieId">@movie.Title</a></i></p>
+            <p>Release: @movie.Released </p>
+            <p>Age Group: @movie.AgeLevel</p> 
+        </div>
+    }
+</div>

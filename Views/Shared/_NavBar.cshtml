@@ -1,0 +1,13 @@
+@using Microsoft.AspNetCore.Http;
+<nav class="navbar-expand-lg navbar-dark bg-dark">
+    <div class="container" style="text-align: center; padding-bottom: 10px;">
+        <h1>Dojo-Flix</h1>
+        @{
+            int? UserId = @Context.Session.GetInt32("UserID");
+            if(UserId.ToString().Length > 0)
+            {
+                <a class="btn btn-outline-success" href="logout"> Leave the Entertainment </a>
+            }
+        } 
+    </div>
+</nav>

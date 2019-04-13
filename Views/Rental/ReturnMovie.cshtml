@@ -1,0 +1,45 @@
+@model Rental
+
+<div class="navigation-link">
+    <a href="/dashboard">Dashboard</a> | <a href="/GetMovies">Movies</a> | <a href="/GetMoveCreateForm">Add Movie</a>
+</div>
+
+<div class="movie-poster-larg">
+    <img class="large" src="@Model.UserMovie.Movie.Poster" alt="MoviePoster">    
+</div>
+<div class="movie-detail-info">
+    <p class="movie-title">
+       Title: @Model.UserMovie.Movie.Title
+    </p>
+    <p>
+        Gener: @Model.UserMovie.Movie.GenerId
+    </p>
+    <p>
+        Released: @Model.UserMovie.Movie.Released
+    </p>
+    <p>
+        Age Level: @Model.UserMovie.Movie.AgeLevel
+    </p>
+    <p>
+        Description: @Model.UserMovie.Movie.Description
+    </p>
+
+    <hr>
+
+    <form class="movie-rating">
+        <div class="form-group">
+            <span asp-validation-for="@Model.Rating.RatingValue" class="errorMessage"></span>
+            <label asp-for="@Model.Rating.RatingValue"></label>
+            <select class="form-control" asp-for="@Model.Rating.RatingValue">
+                <option value="">-</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>        
+        <button formaction="/ReturnMovie/@Model.UserMovie.UserMovieId/@Model.UserMovie.Movie.MovieId" formmethod="POST" class="btn btn-success">Return Movie</button>
+        <button formaction="/dashboard" formmethod="GET" class="btn btn-success">Cancel</button>
+    </form>
+</div>

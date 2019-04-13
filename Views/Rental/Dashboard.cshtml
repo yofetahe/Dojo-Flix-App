@@ -1,0 +1,40 @@
+@model User
+
+<div class="navigation-link">
+    Dashboard | <a href="GetMovies">Movies</a> | <a href="GetMoveCreateForm">Add Movie</a>
+</div>
+
+<div class="jumbotron">
+    <h4 class="display-5">Hello, @Model.FirstName @Model.LastName</h4>
+    <hr>
+    <p> # of Watched Movies: @Model.UserMovies.Count | Joined: @Model.CreatedAt</p>
+    @foreach (var movie in @Model.UserMovies)
+    {
+        @if(@movie.isReturned == true)
+        {
+            <div class="movie-thumb">
+                <img class="very-small" src="@movie.Movie.Poster" alt="MoviePoster">
+                <p><i>@movie.Movie.Title</i></p>                 
+            </div>
+        }
+    }    
+</div>
+
+<div class="movies-list">
+    <h3>Movies Currently Checked Out</h3>
+    <hr>
+    @foreach (var movie in @Model.UserMovies)
+    {
+        @if(@movie.isReturned == false)
+        {
+            <div class="movie-link">
+                <img class="small" src="@movie.Movie.Poster" alt="MoviePoster">
+                <br><br>
+                <p>Movie Title: <i>@movie.Movie.Title</i></p>
+                <p>Release: @movie.Movie.Released </p>
+                <p>Age Group: @movie.Movie.AgeLevel</p>
+                <a href="ReturnMovie/@movie.UserMovieId" class="btn btn-success">Return</a> 
+            </div>
+        }
+    }
+</div>

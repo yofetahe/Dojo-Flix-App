@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotnetFlix.Models
 {
-    public class LogUser: CreateUpdate
+    public class LogUser
     {
        [Display(Name="Email")]
        [Required(ErrorMessage="Email is required.")]

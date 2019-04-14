@@ -22,15 +22,12 @@
     </p>
     <p>
         @{
-            double sum = 0.0, counter = 1.0;
-        
-            @foreach (var item in @Model.UserMovies)
+            double sum = 0.0;
+            foreach (UserMovie item in @Model.UserMovies)
             {
                 sum += item.RatingValue;
-                counter += 1;
             }
-
-            double averageRating = sum/counter;
+            double averageRating = sum/@Model.UserMovies.Count;
         }
         Average Customer Rating: @averageRating
     </p>

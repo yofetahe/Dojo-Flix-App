@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotnetFlix.Models
 {
-    public class Rating : CreateUpdate
+    public class Rating
     {
         [Display(Name="Your Rating")]
         [Required]        

@@ -27,19 +27,19 @@ namespace DotnetFlix.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LogUser LogUser)
+        public IActionResult Login(LogUser form)
         {            
             if(ModelState.IsValid)
             {
-                User UserInfo = dbContext.Users.SingleOrDefault(u => u.Email == LogUser.LoginEmail);
-                if(UserInfo == null)
+                User UserInfo = dbContext.Users.SingleOrDefault(u => u.Email == form.LoginEmail);
+                if(UserInfo is null)
                 {
                     ModelState.AddModelError("LoginEmail", "Invalid User");
                     return View("Index");
                 }
 
                 PasswordHasher<LogUser> Hasher = new PasswordHasher<LogUser>();
-                var result = Hasher.VerifyHashedPassword(LogUser, UserInfo.Password, LogUser.LoginPassword);
+                var result = Hasher.VerifyHashedPassword(form, UserInfo.Password, form.LoginPassword);
                 
                 if(!result.ToString().Equals("Success"))
                 {
@@ -50,45 +50,42 @@ namespace DotnetFlix.Controllers
                 HttpContext.Session.SetInt32("UserID", UserInfo.UserId);
                 
                 return RedirectToAction("Success", "User");
-            } else {
-                return View("Index");
-            }
+            } 
+            return View("Index");
         }
 
         [HttpPost("registration")]
-        public IActionResult Registration(User User)
+        public IActionResult Registration(RegUser form)
         {
             if(ModelState.IsValid)
             {
-                if(dbContext.Users.Any(u => u.Email == User.Email)){
+                if(dbContext.Users.Any(u => u.Email == form.RegEmail))
+                {
                     ModelState.AddModelError("Email", "This Email already exist");
                     return View("Index");
                 }
 
-                PasswordHasher<User> Hasher = new PasswordHasher<User>();
-                User.Password = Hasher.HashPassword(User, User.Password);
+                PasswordHasher<RegUser> Hasher = new PasswordHasher<RegUser>();
+                form.RegPassword = Hasher.HashPassword(form, form.RegPassword);
 
-                dbContext.Add(User);
+                User newUser = new User(form);
+                dbContext.Add(newUser);
                 dbContext.SaveChanges();
 
-                User UserInfo = dbContext.Users.SingleOrDefault(u => u.Email == User.Email);
+                User UserInfo = dbContext.Users.SingleOrDefault(u => u.Email == form.RegEmail);
                 HttpContext.Session.SetInt32("UserID", UserInfo.UserId);
                 
                 return RedirectToAction("Success");
-            } else {
-                return View("Index");
             }
+            return View("Index");
         }
 
         [HttpGet("success")]
         public IActionResult Success()
         {
             int? UserID = HttpContext.Session.GetInt32("UserID");
-            
-            if(UserID.ToString().Length == 0)
-            {
+            if(UserID is null)
                 return RedirectToAction("Index");
-            }
 
             User UserInfo = dbContext.Users.SingleOrDefault(u => u.UserId == UserID);
 

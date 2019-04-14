@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotnetFlix.Models
 {
-    public class UserMovie : CreateUpdate
+    public class UserMovie : BaseDataModel
     {
         [Key]
         public int UserMovieId { get; set; }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DotnetFlix.Models
 {
-    public class RegUser: CreateUpdate
+    public class RegUser 
     {
        [Display(Name="First Name")]
        [Required(ErrorMessage="First name is required.")]
@@ -24,5 +24,10 @@ namespace DotnetFlix.Models
        [MinLength(8, ErrorMessage="Min of 8 character")]
        [DataType(DataType.Password)]
        public string RegPassword { get; set; }
+
+       [Display(Name="Confirm Password")]
+       [Compare("RegPassword", ErrorMessage="Password do not match.")]
+       [DataType(DataType.Password)]
+       public string RegConfirm {get; set; }
     }
 }

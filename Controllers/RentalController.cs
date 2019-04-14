@@ -24,8 +24,7 @@ namespace DotnetFlix.Controllers
         public IActionResult Dashboard()
         {
             int? UserID = HttpContext.Session.GetInt32("UserID");            
-            if(UserID.ToString().Length == 0) 
-                return RedirectToAction("Index", "User");
+            if (UserID is null) return RedirectToAction("Index", "User");
             
             User UserInfo = dbContext.Users
                 .Include(u => u.UserMovies)
@@ -39,8 +38,7 @@ namespace DotnetFlix.Controllers
         public IActionResult GetMovies()
         {
             int? UserID = HttpContext.Session.GetInt32("UserID");            
-            if(UserID.ToString().Length == 0) 
-                return RedirectToAction("Index", "User");
+            if (UserID is null) return RedirectToAction("Index", "User");
 
             List<Movie> Movies = dbContext.Movies
                 .Include(m => m.UserMovies)
@@ -57,37 +55,33 @@ namespace DotnetFlix.Controllers
         public IActionResult GetMoveCreateForm()
         {
             int? UserID = HttpContext.Session.GetInt32("UserID");            
-            if(UserID.ToString().Length == 0) 
+            if (UserID.ToString().Length == 0) 
                 return RedirectToAction("Index", "User");
 
             return View("CreateMovie");
         }
 
         [HttpPost("createMovie")]
-        public IActionResult CreateMovie(Movie Movie)
+        public IActionResult CreateMovie(NewMovie form)
         {
             int? UserID = HttpContext.Session.GetInt32("UserID");            
-            if(UserID.ToString().Length == 0) 
-                return RedirectToAction("Index", "User");
+            if (UserID is null) return RedirectToAction("Index", "User");
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                Movie.Avialiablity = true;
-                dbContext.Add(Movie);
+                Movie newMovie = new Movie(form);
+                dbContext.Add(newMovie);
                 dbContext.SaveChanges();
                 return RedirectToAction("GetMovies");
             }
-            else
-            {
-                return View();
-            }
+            return View();
         }
 
         [HttpGet("MovieDetail/{MovieId}")]
         public IActionResult MovieDetail(int MovieId)
         {
             int? UserID = HttpContext.Session.GetInt32("UserID");            
-            if(UserID.ToString().Length == 0) 
+            if (UserID is null) 
                 return RedirectToAction("Index", "User");
 
             Movie movie = dbContext.Movies
@@ -100,8 +94,7 @@ namespace DotnetFlix.Controllers
         public IActionResult CheckOutMovie(int MovieId)
         {
             int? UserId = HttpContext.Session.GetInt32("UserID");            
-            if(UserId.ToString().Length == 0) 
-                return RedirectToAction("Index", "User");
+            if (UserId is null) return RedirectToAction("Index", "User");
             
             // To validate max of 5 movies
             User user = dbContext.Users
@@ -109,15 +102,16 @@ namespace DotnetFlix.Controllers
                 .FirstOrDefault(u => u.UserId == UserId);
 
             int moveCounter = 0;
-            foreach(var mov in user.UserMovies)
+            foreach (UserMovie mov in user.UserMovies)
             {
-                if(mov.isReturned == false)
+                if (mov.isReturned == false)
                 {
                     moveCounter += 1;
                 }
             }
             
-            if(moveCounter == 5){
+            if (moveCounter == 5)
+            {
                 Movie mov = dbContext.Movies
                     .Include(m => m.UserMovies)
                     .FirstOrDefault(m => m.MovieId == MovieId);
@@ -125,7 +119,8 @@ namespace DotnetFlix.Controllers
             }
 
             //Change the avialiablity of the movie
-            Movie movie = dbContext.Movies.FirstOrDefault(m => m.MovieId == MovieId);
+            Movie movie = dbContext.Movies
+                .FirstOrDefault(m => m.MovieId == MovieId);
             movie.Avialiablity = false;
             dbContext.Movies.Update(movie);
 
@@ -134,7 +129,6 @@ namespace DotnetFlix.Controllers
             um.MovieId = MovieId;
             um.UserId = (int)UserId;
             dbContext.UserMovies.Add(um);
-
             dbContext.SaveChanges();
 
             return RedirectToAction("GetMovies");
@@ -144,8 +138,7 @@ namespace DotnetFlix.Controllers
         public IActionResult ReturnMovieForm(int UserMovieId)
         {
             int? UserId = HttpContext.Session.GetInt32("UserID");            
-            if(UserId.ToString().Length == 0) 
-                return RedirectToAction("Index", "User");
+            if (UserId is null) return RedirectToAction("Index", "User");
 
             UserMovie userMovie = dbContext.UserMovies
                 .Include(um => um.Movie)
@@ -162,13 +155,13 @@ namespace DotnetFlix.Controllers
         {
 
             int? UserId = HttpContext.Session.GetInt32("UserID");            
-            if(UserId.ToString().Length == 0) 
-                return RedirectToAction("Index", "User");
+            if (UserId is null) return RedirectToAction("Index", "User");
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 //Change the avialiablity of the movie
-                Movie movie = dbContext.Movies.FirstOrDefault(m => m.MovieId == MovieId);
+                Movie movie = dbContext.Movies
+                    .FirstOrDefault(m => m.MovieId == MovieId);
                 movie.Avialiablity = true;
                 dbContext.Movies.Update(movie);
                 
@@ -185,7 +178,7 @@ namespace DotnetFlix.Controllers
             }
             else
             {
-                 UserMovie userMovie = dbContext.UserMovies
+                UserMovie userMovie = dbContext.UserMovies
                     .Include(um => um.Movie)
                     .FirstOrDefault(um => um.MovieId == MovieId && um.UserId == UserId);
 

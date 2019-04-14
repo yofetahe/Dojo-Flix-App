@@ -102,6 +102,27 @@ namespace DotnetFlix.Controllers
             int? UserId = HttpContext.Session.GetInt32("UserID");            
             if(UserId.ToString().Length == 0) 
                 return RedirectToAction("Index", "User");
+            
+            // To validate max of 5 movies
+            User user = dbContext.Users
+                .Include(u => u.UserMovies)                       
+                .FirstOrDefault(u => u.UserId == UserId);
+
+            int moveCounter = 0;
+            foreach(var mov in user.UserMovies)
+            {
+                if(mov.isReturned == false)
+                {
+                    moveCounter += 1;
+                }
+            }
+            
+            if(moveCounter == 5){
+                Movie mov = dbContext.Movies
+                    .Include(m => m.UserMovies)
+                    .FirstOrDefault(m => m.MovieId == MovieId);
+                return View("MovieDetail", mov);
+            }
 
             //Change the avialiablity of the movie
             Movie movie = dbContext.Movies.FirstOrDefault(m => m.MovieId == MovieId);
